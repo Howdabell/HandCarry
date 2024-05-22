@@ -175,6 +175,9 @@ class HandCarry:
         product_name = self.product_name_entry.get()
         try:
             quantity = int(self.quantity_entry.get())
+            if quantity <= 0:
+                messagebox.showerror("Error", "Please enter a valid quantity.")
+                return
             for product in self.products:
                 if product.name == product_name:
                     if self.current_user.cart.add_product(product, quantity):
