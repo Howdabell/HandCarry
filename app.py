@@ -52,11 +52,13 @@ class HandCarry:
         ]
         self.current_user = None
 
+        self.frame = tk.Frame(self.root)
+        self.frame.pack(pady=20)
+
         self.create_widgets()
 
     def create_widgets(self):
-        self.frame = tk.Frame(self.root)
-        self.frame.pack(pady=20)
+        self.clear_frame()
 
         self.title_label = tk.Label(self.frame, text="HandCarry", font=("Arial", 24))
         self.title_label.grid(row=0, column=0, columnspan=2)
