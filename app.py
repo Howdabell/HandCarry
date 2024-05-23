@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
+import os
 
 class User:
     def __init__(self, username, password):
@@ -40,6 +42,7 @@ class HandCarry:
     def __init__(self, root):
         self.root = root
         self.root.title("HandCarry")
+        self.root.geometry("600x600")  # Set window size
 
         self.users = {}
         self.products = [
@@ -52,13 +55,25 @@ class HandCarry:
         ]
         self.current_user = None
 
-        self.frame = tk.Frame(self.root)
-        self.frame.pack(pady=20)
+        self.product_images = {}  # Dictionary to store product images
 
+        self.load_product_images()
         self.create_widgets()
 
+    def load_product_images(self):
+        for product in self.products:
+            image_path = os.path.join("images", f"{product.name.replace(' ', '_')}.png")
+            if os.path.exists(image_path):
+                image = Image.open(image_path)
+                image = image.resize((100, 100), Image.ANTIALIAS)
+                photo = ImageTk.PhotoImage(image)
+                self.product_images[product.name] = photo
+            else:
+                print(f"Image for {product.name} not found at {image_path}")
+
     def create_widgets(self):
-        self.clear_frame()
+        self.frame = tk.Frame(self.root)
+        self.frame.pack(pady=20)
 
         self.title_label = tk.Label(self.frame, text="HandCarry", font=("Arial", 24))
         self.title_label.grid(row=0, column=0, columnspan=2)
@@ -151,27 +166,35 @@ class HandCarry:
     def list_products(self):
         self.clear_frame()
         self.title_label = tk.Label(self.frame, text="Products", font=("Arial", 24))
-        self.title_label.grid(row=0, column=0, columnspan=2)
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=10)
 
         for i, product in enumerate(self.products):
-            product_label = tk.Label(self.frame, text=f"{product.name}: Rp{product.price} (Stock: {product.quantity})")
-            product_label.grid(row=i+1, column=0, columnspan=2)
+            product_frame = tk.Frame(self.frame)
+            product_frame.grid(row=i+1, column=0, columnspan=2, pady=10)
 
-        self.product_name_label = tk.Label(self.frame, text="Product name:")
-        self.product_name_label.grid(row=len(self.products)+1, column=0)
-        self.product_name_entry = tk.Entry(self.frame)
-        self.product_name_entry.grid(row=len(self.products)+1, column=1)
+            product_image = self.product_images.get(product.name)
+            if product_image:
+                product_image_label = tk.Label(product_frame, image=product_image)
+                product_image_label.grid(row=0, column=0, padx=10)
 
-        self.quantity_label = tk.Label(self.frame, text="Quantity:")
-        self.quantity_label.grid(row=len(self.products)+2, column=0)
-        self.quantity_entry = tk.Entry(self.frame)
-        self.quantity_entry.grid(row=len(self.products)+2, column=1)
+            product_info_label = tk.Label(product_frame, text=f"{product.name}: Rp{product.price} (Stock: {product.quantity})", font=("Arial", 12))
+            product_info_label.grid(row=0, column=1, padx=10)
 
-        self.add_to_cart_button = tk.Button(self.frame, text="Add to Cart", command=self.add_to_cart)
+        self.product_name_label = tk.Label(self.frame, text="Product name:", font=("Arial", 12))
+        self.product_name_label.grid(row=len(self.products)+1, column=0, pady=5)
+        self.product_name_entry = tk.Entry(self.frame, font=("Arial", 12))
+        self.product_name_entry.grid(row=len(self.products)+1, column=1, pady=5)
+
+        self.quantity_label = tk.Label(self.frame, text="Quantity:", font=("Arial", 12))
+        self.quantity_label.grid(row=len(self.products)+2, column=0, pady=5)
+        self.quantity_entry = tk.Entry(self.frame, font=("Arial", 12))
+        self.quantity_entry.grid(row=len(self.products)+2, column=1, pady=5)
+
+        self.add_to_cart_button = tk.Button(self.frame, text="Add to Cart", command=self.add_to_cart, bg="#e67e22", fg="white", font=("Arial", 12, "bold"))
         self.add_to_cart_button.grid(row=len(self.products)+3, column=0, columnspan=2, pady=10)
 
-        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu)
-        self.back_button.grid(row=len(self.products)+4, column=0, columnspan=2)
+        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu, bg="#3498db", fg="white", font=("Arial", 12, "bold"))
+        self.back_button.grid(row=len(self.products)+4, column=0, columnspan=2, pady=10)
 
     def add_to_cart(self):
         product_name = self.product_name_entry.get()
@@ -197,11 +220,11 @@ class HandCarry:
         self.title_label.grid(row=0, column=0, columnspan=2)
 
         cart_contents = self.current_user.cart.view_cart()
-        self.cart_label = tk.Label(self.frame, text=cart_contents)
-        self.cart_label.grid(row=1, column=0, columnspan=2)
+        self.cart_label = tk.Label(self.frame, text=cart_contents, font=("Arial", 12))
+        self.cart_label.grid(row=1, column=0, columnspan=2, pady=10)
 
-        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu)
-        self.back_button.grid(row=2, column=0, columnspan=2)
+        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu, bg="#3498db", fg="white", font=("Arial", 12, "bold"))
+        self.back_button.grid(row=2, column=0, columnspan=2, pady=10)
 
     def checkout(self):
         total = self.current_user.cart.checkout()
