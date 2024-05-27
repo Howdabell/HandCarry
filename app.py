@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import messagebox
-from PIL import Image, ImageTk
-import os
 
 class User:
     def __init__(self, username, password):
@@ -42,7 +40,7 @@ class HandCarry:
     def __init__(self, root):
         self.root = root
         self.root.title("HandCarry")
-        self.root.geometry("600x600")  # Set window size
+        self.root.geometry("600x600")
 
         self.users = {}
         self.products = [
@@ -55,55 +53,43 @@ class HandCarry:
         ]
         self.current_user = None
 
-        self.product_images = {}  # Dictionary to store product images
-
-        self.load_product_images()
-        self.create_widgets()
-
-    def load_product_images(self):
-        for product in self.products:
-            image_path = os.path.join("images", f"{product.name.replace(' ', '_')}.png")
-            if os.path.exists(image_path):
-                image = Image.open(image_path)
-                image = image.resize((100, 100), Image.ANTIALIAS)
-                photo = ImageTk.PhotoImage(image)
-                self.product_images[product.name] = photo
-            else:
-                print(f"Image for {product.name} not found at {image_path}")
-
-    def create_widgets(self):
         self.frame = tk.Frame(self.root)
         self.frame.pack(pady=20)
 
-        self.title_label = tk.Label(self.frame, text="HandCarry", font=("Arial", 24))
-        self.title_label.grid(row=0, column=0, columnspan=2)
+        self.create_widgets()
 
-        self.register_button = tk.Button(self.frame, text="Register", command=self.register)
-        self.register_button.grid(row=1, column=0, pady=10)
+    def create_widgets(self):
+        self.clear_frame()
 
-        self.login_button = tk.Button(self.frame, text="Login", command=self.login)
-        self.login_button.grid(row=1, column=1, pady=10)
+        self.title_label = tk.Label(self.frame, text="HandCarry", font=("Arial", 24, "bold"), fg="#2c3e50")
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
+
+        self.register_button = tk.Button(self.frame, text="Register", command=self.register, bg="#3498db", fg="white", font=("Arial", 12, "bold"))
+        self.register_button.grid(row=1, column=0, pady=10, padx=10)
+
+        self.login_button = tk.Button(self.frame, text="Login", command=self.login, bg="#2ecc71", fg="white", font=("Arial", 12, "bold"))
+        self.login_button.grid(row=1, column=1, pady=10, padx=10)
 
     def register(self):
         self.clear_frame()
-        self.title_label = tk.Label(self.frame, text="Register", font=("Arial", 24))
-        self.title_label.grid(row=0, column=0, columnspan=2)
+        self.title_label = tk.Label(self.frame, text="Register", font=("Arial", 24, "bold"), fg="#2c3e50")
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
 
-        self.username_label = tk.Label(self.frame, text="Username:")
-        self.username_label.grid(row=1, column=0)
-        self.username_entry = tk.Entry(self.frame)
-        self.username_entry.grid(row=1, column=1)
+        self.username_label = tk.Label(self.frame, text="Username:", font=("Arial", 12))
+        self.username_label.grid(row=1, column=0, pady=5)
+        self.username_entry = tk.Entry(self.frame, font=("Arial", 12))
+        self.username_entry.grid(row=1, column=1, pady=5)
 
-        self.password_label = tk.Label(self.frame, text="Password:")
-        self.password_label.grid(row=2, column=0)
-        self.password_entry = tk.Entry(self.frame, show="*")
-        self.password_entry.grid(row=2, column=1)
+        self.password_label = tk.Label(self.frame, text="Password:", font=("Arial", 12))
+        self.password_label.grid(row=2, column=0, pady=5)
+        self.password_entry = tk.Entry(self.frame, show="*", font=("Arial", 12))
+        self.password_entry.grid(row=2, column=1, pady=5)
 
-        self.register_submit_button = tk.Button(self.frame, text="Register", command=self.register_user)
+        self.register_submit_button = tk.Button(self.frame, text="Register", command=self.register_user, bg="#e67e22", fg="white", font=("Arial", 12, "bold"))
         self.register_submit_button.grid(row=3, column=0, columnspan=2, pady=10)
 
-        self.back_button = tk.Button(self.frame, text="Back", command=self.go_back)
-        self.back_button.grid(row=4, column=0, columnspan=2)
+        self.back_button = tk.Button(self.frame, text="Back", command=self.go_back, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
+        self.back_button.grid(row=4, column=0, columnspan=2, pady=10)
 
     def register_user(self):
         username = self.username_entry.get()
@@ -117,24 +103,24 @@ class HandCarry:
 
     def login(self):
         self.clear_frame()
-        self.title_label = tk.Label(self.frame, text="Login", font=("Arial", 24))
-        self.title_label.grid(row=0, column=0, columnspan=2)
+        self.title_label = tk.Label(self.frame, text="Login", font=("Arial", 24, "bold"), fg="#2c3e50")
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
 
-        self.username_label = tk.Label(self.frame, text="Username:")
-        self.username_label.grid(row=1, column=0)
-        self.username_entry = tk.Entry(self.frame)
-        self.username_entry.grid(row=1, column=1)
+        self.username_label = tk.Label(self.frame, text="Username:", font=("Arial", 12))
+        self.username_label.grid(row=1, column=0, pady=5)
+        self.username_entry = tk.Entry(self.frame, font=("Arial", 12))
+        self.username_entry.grid(row=1, column=1, pady=5)
 
-        self.password_label = tk.Label(self.frame, text="Password:")
-        self.password_label.grid(row=2, column=0)
-        self.password_entry = tk.Entry(self.frame, show="*")
-        self.password_entry.grid(row=2, column=1)
+        self.password_label = tk.Label(self.frame, text="Password:", font=("Arial", 12))
+        self.password_label.grid(row=2, column=0, pady=5)
+        self.password_entry = tk.Entry(self.frame, show="*", font=("Arial", 12))
+        self.password_entry.grid(row=2, column=1, pady=5)
 
-        self.login_submit_button = tk.Button(self.frame, text="Login", command=self.login_user)
+        self.login_submit_button = tk.Button(self.frame, text="Login", command=self.login_user, bg="#e67e22", fg="white", font=("Arial", 12, "bold"))
         self.login_submit_button.grid(row=3, column=0, columnspan=2, pady=10)
 
-        self.back_button = tk.Button(self.frame, text="Back", command=self.go_back)
-        self.back_button.grid(row=4, column=0, columnspan=2)
+        self.back_button = tk.Button(self.frame, text="Back", command=self.go_back, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
+        self.back_button.grid(row=4, column=0, columnspan=2, pady=10)
 
     def login_user(self):
         username = self.username_entry.get()
@@ -148,37 +134,29 @@ class HandCarry:
 
     def show_main_menu(self):
         self.clear_frame()
-        self.title_label = tk.Label(self.frame, text="Main Menu", font=("Arial", 24))
-        self.title_label.grid(row=0, column=0, columnspan=2)
+        self.title_label = tk.Label(self.frame, text="Main Menu", font=("Arial", 24, "bold"), fg="#2c3e50")
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
 
-        self.list_products_button = tk.Button(self.frame, text="List Products", command=self.list_products)
-        self.list_products_button.grid(row=1, column=0, pady=10)
+        self.list_products_button = tk.Button(self.frame, text="List Products", command=self.list_products, bg="#3498db", fg="white", font=("Arial", 12, "bold"))
+        self.list_products_button.grid(row=1, column=0, pady=10, padx=10)
 
-        self.view_cart_button = tk.Button(self.frame, text="View Cart", command=self.view_cart)
-        self.view_cart_button.grid(row=1, column=1, pady=10)
+        self.view_cart_button = tk.Button(self.frame, text="View Cart", command=self.view_cart, bg="#2ecc71", fg="white", font=("Arial", 12, "bold"))
+        self.view_cart_button.grid(row=1, column=1, pady=10, padx=10)
 
-        self.checkout_button = tk.Button(self.frame, text="Checkout", command=self.checkout)
+        self.checkout_button = tk.Button(self.frame, text="Checkout", command=self.checkout, bg="#e67e22", fg="white", font=("Arial", 12, "bold"))
         self.checkout_button.grid(row=2, column=0, columnspan=2, pady=10)
 
-        self.logout_button = tk.Button(self.frame, text="Logout", command=self.logout)
+        self.logout_button = tk.Button(self.frame, text="Logout", command=self.logout, bg="#e74c3c", fg="white", font=("Arial", 12, "bold"))
         self.logout_button.grid(row=3, column=0, columnspan=2, pady=10)
 
     def list_products(self):
         self.clear_frame()
-        self.title_label = tk.Label(self.frame, text="Products", font=("Arial", 24))
-        self.title_label.grid(row=0, column=0, columnspan=2, pady=10)
+        self.title_label = tk.Label(self.frame, text="Products", font=("Arial", 24, "bold"), fg="#2c3e50")
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
 
         for i, product in enumerate(self.products):
-            product_frame = tk.Frame(self.frame)
-            product_frame.grid(row=i+1, column=0, columnspan=2, pady=10)
-
-            product_image = self.product_images.get(product.name)
-            if product_image:
-                product_image_label = tk.Label(product_frame, image=product_image)
-                product_image_label.grid(row=0, column=0, padx=10)
-
-            product_info_label = tk.Label(product_frame, text=f"{product.name}: Rp{product.price} (Stock: {product.quantity})", font=("Arial", 12))
-            product_info_label.grid(row=0, column=1, padx=10)
+            product_label = tk.Label(self.frame, text=f"{product.name}: Rp{product.price} (Stock: {product.quantity})", font=("Arial", 12))
+            product_label.grid(row=i+1, column=1, padx=10, pady=10)
 
         self.product_name_label = tk.Label(self.frame, text="Product name:", font=("Arial", 12))
         self.product_name_label.grid(row=len(self.products)+1, column=0, pady=5)
@@ -193,7 +171,7 @@ class HandCarry:
         self.add_to_cart_button = tk.Button(self.frame, text="Add to Cart", command=self.add_to_cart, bg="#e67e22", fg="white", font=("Arial", 12, "bold"))
         self.add_to_cart_button.grid(row=len(self.products)+3, column=0, columnspan=2, pady=10)
 
-        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu, bg="#3498db", fg="white", font=("Arial", 12, "bold"))
+        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
         self.back_button.grid(row=len(self.products)+4, column=0, columnspan=2, pady=10)
 
     def add_to_cart(self):
@@ -216,14 +194,14 @@ class HandCarry:
 
     def view_cart(self):
         self.clear_frame()
-        self.title_label = tk.Label(self.frame, text="Your Cart", font=("Arial", 24))
-        self.title_label.grid(row=0, column=0, columnspan=2)
+        self.title_label = tk.Label(self.frame, text="Your Cart", font=("Arial", 24, "bold"), fg="#2c3e50")
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
 
         cart_contents = self.current_user.cart.view_cart()
         self.cart_label = tk.Label(self.frame, text=cart_contents, font=("Arial", 12))
         self.cart_label.grid(row=1, column=0, columnspan=2, pady=10)
 
-        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu, bg="#3498db", fg="white", font=("Arial", 12, "bold"))
+        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
         self.back_button.grid(row=2, column=0, columnspan=2, pady=10)
 
     def checkout(self):
