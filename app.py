@@ -1,11 +1,18 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 
 class User:
     def __init__(self, username, password):
         self.username = username
         self.password = password
         self.cart = Cart()
+        self.purchase_history = []
+
+    def add_to_purchase_history(self, items):
+        self.purchase_history.append(items)
+
+    def view_purchase_history(self):
+        return self.purchase_history
 
 class Product:
     def __init__(self, name, price, quantity):
@@ -33,8 +40,9 @@ class Cart:
     
     def checkout(self):
         total = sum(item.price * quantity for item, quantity in self.items)
+        items = self.items[:]
         self.items = []
-        return total
+        return total, items
 
 class HandCarry:
     def __init__(self, root):
@@ -52,6 +60,7 @@ class HandCarry:
             Product("ANTA KT 9", 2000000, 2)
         ]
         self.current_user = None
+        self.order_queue = []
 
         self.frame = tk.Frame(self.root)
         self.frame.pack(pady=20)
@@ -70,25 +79,29 @@ class HandCarry:
         self.login_button = tk.Button(self.frame, text="Login", command=self.login, bg="#2ecc71", fg="white", font=("Arial", 12, "bold"))
         self.login_button.grid(row=1, column=1, pady=10, padx=10)
 
+    def clear_frame(self):
+        for widget in self.frame.winfo_children():
+            widget.destroy()
+
     def register(self):
         self.clear_frame()
         self.title_label = tk.Label(self.frame, text="Register", font=("Arial", 24, "bold"), fg="#2c3e50")
         self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
 
         self.username_label = tk.Label(self.frame, text="Username:", font=("Arial", 12))
-        self.username_label.grid(row=1, column=0, pady=5)
+        self.username_label.grid(row=1, column=0, pady=10, padx=10)
         self.username_entry = tk.Entry(self.frame, font=("Arial", 12))
-        self.username_entry.grid(row=1, column=1, pady=5)
+        self.username_entry.grid(row=1, column=1, pady=10, padx=10)
 
         self.password_label = tk.Label(self.frame, text="Password:", font=("Arial", 12))
-        self.password_label.grid(row=2, column=0, pady=5)
+        self.password_label.grid(row=2, column=0, pady=10, padx=10)
         self.password_entry = tk.Entry(self.frame, show="*", font=("Arial", 12))
-        self.password_entry.grid(row=2, column=1, pady=5)
+        self.password_entry.grid(row=2, column=1, pady=10, padx=10)
 
-        self.register_submit_button = tk.Button(self.frame, text="Register", command=self.register_user, bg="#e67e22", fg="white", font=("Arial", 12, "bold"))
-        self.register_submit_button.grid(row=3, column=0, columnspan=2, pady=10)
+        self.register_button = tk.Button(self.frame, text="Register", command=self.register_user, bg="#3498db", fg="white", font=("Arial", 12, "bold"))
+        self.register_button.grid(row=3, column=0, columnspan=2, pady=10)
 
-        self.back_button = tk.Button(self.frame, text="Back", command=self.go_back, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
+        self.back_button = tk.Button(self.frame, text="Back", command=self.create_widgets, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
         self.back_button.grid(row=4, column=0, columnspan=2, pady=10)
 
     def register_user(self):
@@ -99,7 +112,7 @@ class HandCarry:
         else:
             self.users[username] = User(username, password)
             messagebox.showinfo("Success", "User registered successfully!")
-            self.go_back()
+            self.create_widgets()
 
     def login(self):
         self.clear_frame()
@@ -107,19 +120,19 @@ class HandCarry:
         self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
 
         self.username_label = tk.Label(self.frame, text="Username:", font=("Arial", 12))
-        self.username_label.grid(row=1, column=0, pady=5)
+        self.username_label.grid(row=1, column=0, pady=10, padx=10)
         self.username_entry = tk.Entry(self.frame, font=("Arial", 12))
-        self.username_entry.grid(row=1, column=1, pady=5)
+        self.username_entry.grid(row=1, column=1, pady=10, padx=10)
 
         self.password_label = tk.Label(self.frame, text="Password:", font=("Arial", 12))
-        self.password_label.grid(row=2, column=0, pady=5)
+        self.password_label.grid(row=2, column=0, pady=10, padx=10)
         self.password_entry = tk.Entry(self.frame, show="*", font=("Arial", 12))
-        self.password_entry.grid(row=2, column=1, pady=5)
+        self.password_entry.grid(row=2, column=1, pady=10, padx=10)
 
-        self.login_submit_button = tk.Button(self.frame, text="Login", command=self.login_user, bg="#e67e22", fg="white", font=("Arial", 12, "bold"))
-        self.login_submit_button.grid(row=3, column=0, columnspan=2, pady=10)
+        self.login_button = tk.Button(self.frame, text="Login", command=self.login_user, bg="#2ecc71", fg="white", font=("Arial", 12, "bold"))
+        self.login_button.grid(row=3, column=0, columnspan=2, pady=10)
 
-        self.back_button = tk.Button(self.frame, text="Back", command=self.go_back, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
+        self.back_button = tk.Button(self.frame, text="Back", command=self.create_widgets, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
         self.back_button.grid(row=4, column=0, columnspan=2, pady=10)
 
     def login_user(self):
@@ -146,8 +159,14 @@ class HandCarry:
         self.checkout_button = tk.Button(self.frame, text="Checkout", command=self.checkout, bg="#e67e22", fg="white", font=("Arial", 12, "bold"))
         self.checkout_button.grid(row=2, column=0, columnspan=2, pady=10)
 
+        self.view_history_button = tk.Button(self.frame, text="View Purchase History", command=self.view_purchase_history, bg="#f39c12", fg="white", font=("Arial", 12, "bold"))
+        self.view_history_button.grid(row=3, column=0, pady=10, padx=10)
+
+        self.view_queue_button = tk.Button(self.frame, text="View Order Queue", command=self.view_order_queue, bg="#8e44ad", fg="white", font=("Arial", 12, "bold"))
+        self.view_queue_button.grid(row=3, column=1, pady=10, padx=10)
+
         self.logout_button = tk.Button(self.frame, text="Logout", command=self.logout, bg="#e74c3c", fg="white", font=("Arial", 12, "bold"))
-        self.logout_button.grid(row=3, column=0, columnspan=2, pady=10)
+        self.logout_button.grid(row=4, column=0, columnspan=2, pady=10)
 
     def list_products(self):
         self.clear_frame()
@@ -205,21 +224,51 @@ class HandCarry:
         self.back_button.grid(row=2, column=0, columnspan=2, pady=10)
 
     def checkout(self):
-        total = self.current_user.cart.checkout()
+        total, items = self.current_user.cart.checkout()
+        self.current_user.add_to_purchase_history(items)
+        self.order_queue.append((self.current_user.username, items))
         messagebox.showinfo("Checkout", f"Total amount: Rp{total}. Thank you for your purchase!")
         self.show_main_menu()
 
+    def view_purchase_history(self):
+        self.clear_frame()
+        self.title_label = tk.Label(self.frame, text="Purchase History", font=("Arial", 24, "bold"), fg="#2c3e50")
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
+
+        purchase_history = self.current_user.view_purchase_history()
+        history_text = ""
+        for purchase in purchase_history:
+            for item, quantity in purchase:
+                history_text += f"{item.name}: {quantity} @ Rp{item.price} each\n"
+            history_text += "\n"
+
+        self.history_label = tk.Label(self.frame, text=history_text, font=("Arial", 12))
+        self.history_label.grid(row=1, column=0, columnspan=2, pady=10)
+
+        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
+        self.back_button.grid(row=2, column=0, columnspan=2, pady=10)
+
+    def view_order_queue(self):
+        self.clear_frame()
+        self.title_label = tk.Label(self.frame, text="Order Queue", font=("Arial", 24, "bold"), fg="#2c3e50")
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
+
+        queue_text = ""
+        for order in self.order_queue:
+            username, items = order
+            queue_text += f"User: {username}\n"
+            for item, quantity in items:
+                queue_text += f"  - {item.name}: {quantity} @ Rp{item.price} each\n"
+            queue_text += "\n"
+
+        self.queue_label = tk.Label(self.frame, text=queue_text, font=("Arial", 12))
+        self.queue_label.grid(row=1, column=0, columnspan=2, pady=10)
+
+        self.back_button = tk.Button(self.frame, text="Back", command=self.show_main_menu, bg="#95a5a6", fg="white", font=("Arial", 12, "bold"))
+        self.back_button.grid(row=2, column=0, columnspan=2, pady=10)
+
     def logout(self):
         self.current_user = None
-        messagebox.showinfo("Logout", "Logged out successfully.")
-        self.go_back()
-
-    def clear_frame(self):
-        for widget in self.frame.winfo_children():
-            widget.destroy()
-
-    def go_back(self):
-        self.clear_frame()
         self.create_widgets()
 
 if __name__ == "__main__":
