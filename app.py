@@ -165,12 +165,16 @@ class HandCarry:
         self.view_queue_button = tk.Button(self.frame, text="View Order Queue", command=self.view_order_queue, bg="#8e44ad", fg="white", font=("Arial", 12, "bold"))
         self.view_queue_button.grid(row=3, column=1, pady=10, padx=10)
 
-        self.logout_button = tk.Button(self.frame, text="Logout", command=self.logout, bg="#e74c3c", fg="white", font=("Arial", 12, "bold"))
+        self.logout_button = tk.Button(self.frame, text="Logout", command=self.confirm_logout, bg="#e74c3c", fg="white", font=("Arial", 12, "bold"))
         self.logout_button.grid(row=4, column=0, columnspan=2, pady=10)
+
+    def confirm_logout(self):
+        if messagebox.askyesno("Logout", "Are you sure you want to log out?"):
+            self.logout()
 
     def list_products(self):
         self.clear_frame()
-        self.title_label = tk.Label(self.frame, text="Products", font=("Arial", 24, "bold"), fg="#2c3e50")
+        self.title_label = tk.Label(self.frame, text="List of Products", font=("Arial", 24, "bold"), fg="#2c3e50")
         self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
 
         for i, product in enumerate(self.products):
