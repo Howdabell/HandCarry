@@ -52,12 +52,12 @@ class HandCarry:
 
         self.users = {}
         self.products = [
-            Product("361 AG4 SE", 1900000, 3),
-            Product("Wade Flash", 1500000, 4),
-            Product("ANTA Kai 1", 2300000, 3),
-            Product("Wade Fission 9", 1500000, 3),
-            Product("WOW 10", 2700000, 3),
-            Product("ANTA KT 9", 2000000, 2)
+            Product("Jordan 1", 2700000, 3),
+            Product("Jordan 3", 3000000, 4),
+            Product("Jordan 4", 4000000, 3),
+            Product("Balenciaga", 7000000, 1),
+            Product("Yeezy 350", 2500000, 3),
+            Product("Bapesta", 3000000, 2)
         ]
         self.current_user = None
         self.order_queue = []
