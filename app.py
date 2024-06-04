@@ -229,9 +229,10 @@ class HandCarry:
 
     def checkout(self):
         total, items = self.current_user.cart.checkout()
-        self.current_user.add_to_purchase_history(items)
-        self.order_queue.append((self.current_user.username, items))
-        messagebox.showinfo("Checkout", f"Total amount: Rp{total}. Thank you for your purchase!")
+        if messagebox.askokcancel("Confirm Payment", f" Do you Want To Confirm this Payment, Price: Rp{total}?"):
+            messagebox.showinfo("Checkout", f"Total amount: Rp{total}. Thank you for your purchase!")
+            self.current_user.add_to_purchase_history(items)
+            self.order_queue.append((self.current_user.username, items))
         self.show_main_menu()
 
     def view_purchase_history(self):
